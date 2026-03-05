@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>accesso | Customer Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#005A8E;--primary-dark:#003F63;--primary-light:#E8F4FB;
+  --accent:#00A3E0;--orange:#F5821F;--green:#27AE60;--yellow:#D4A017;
+  --red:#E74C3C;--bg:#F0F4F8;--white:#FFFFFF;
+  --text-dark:#1A2332;--text-med:#546E7A;--text-light:#90A4AE;
+  --border:#E2E8F0;--shadow-sm:0 1px 3px rgba(0,0,0,0.08);
+  --shadow:0 4px 12px rgba(0,0,0,0.08);--shadow-lg:0 8px 28px rgba(0,0,0,0.14);
+  --sidebar-w:252px;--header-h:60px;--radius:10px;--radius-sm:6px;--radius-lg:16px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text-dark);font-size:14px;line-height:1.5;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+
+/* ─── HEADER ─────────────────────────────────────── */
+.header{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:var(--primary-dark);display:flex;align-items:center;padding:0 20px;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+.logo{display:flex;align-items:center;gap:10px;color:white;font-weight:800;font-size:19px;letter-spacing:-.5px;width:var(--sidebar-w);flex-shrink:0;cursor:pointer;}
+.logo-badge{background:var(--accent);width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;}
+.h-search-wrap{flex:1;max-width:520px;position:relative;margin:0 20px;}
+.h-search-wrap input{width:100%;padding:9px 16px 9px 40px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.2);border-radius:20px;color:white;font-size:13px;outline:none;transition:all .2s;font-family:'Inter',sans-serif;}
+.h-search-wrap input::placeholder{color:rgba(255,255,255,.5);}
+.h-search-wrap input:focus{background:rgba(255,255,255,.17);border-color:var(--accent);}
+.h-search-wrap .si{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.5);font-size:13px;}
+.h-actions{margin-left:auto;display:flex;align-items:center;gap:6px;}
+.hbtn{background:none;border:none;color:rgba(255,255,255,.75);cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .2s;position:relative;font-size:15px;}
+.hbtn:hover{background:rgba(255,255,255,.12);color:white;}
+.notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--orange);border-radius:50%;border:2px solid var(--primary-dark);}
+.u-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--primary));color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;cursor:pointer;border:2px solid rgba(255,255,255,.3);}
+
+/* ─── SIDEBAR ────────────────────────────────────── */
+.sidebar{position:fixed;top:var(--header-h);left:0;width:var(--sidebar-w);height:calc(100vh - var(--header-h));background:var(--white);border-right:1px solid var(--border);overflow-y:auto;z-index:900;display:flex;flex-direction:column;}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);}
+.sb-sec{padding:14px 10px 6px;}
+.sb-lbl{font-size:10px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.8px;padding:0 8px;margin-bottom:5px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;color:var(--text-med);font-size:13px;font-weight:500;border:none;background:none;width:100%;text-align:left;font-family:'Inter',sans-serif;}
+.nav-item:hover{background:var(--primary-light);color:var(--primary);}
+.nav-item.active{background:var(--primary-light);color:var(--primary);font-weight:600;}
+.nav-item i{width:17px;font-size:13px;text-align:center;}
+.nav-badge{margin-left:auto;background:var(--primary);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;}
+.nav-badge.ora{background:var(--orange);}
+.sb-div{border:none;border-top:1px solid var(--border);margin:6px 10px;}
+.prod-btn{display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;border-radius:var(--radius-sm);border:none;background:transparent;cursor:pointer;transition:all .15s;text-align:left;margin-bottom:3px;font-family:'Inter',sans-serif;}
+.prod-btn:hover{background:var(--primary-light);}
+.prod-btn.active{background:var(--primary);}
+.pdot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.pname{font-size:13px;font-weight:600;color:var(--text-dark);flex:1;}
+.prod-btn.active .pname{color:white;}
+.sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.s-op{background:var(--green);} .s-deg{background:var(--yellow);} .s-maint{background:var(--text-light);}
+
+/* ─── MAIN ───────────────────────────────────────── */
+.main{margin-left:var(--sidebar-w);margin-top:var(--header-h);padding:22px;min-height:calc(100vh - var(--header-h));}
+
+/* ─── HERO ───────────────────────────────────────── */
+.hero{background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 55%,#0082BB 80%,var(--accent) 100%);border-radius:var(--radius-lg);padding:28px 32px;color:white;margin-bottom:20px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-50px;right:-50px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.05);}
+.hero::after{content:'';position:absolute;bottom:-80px;right:100px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.04);}
+.hero-greeting{font-size:12.5px;opacity:.75;margin-bottom:3px;}
+.hero-title{font-size:24px;font-weight:800;margin-bottom:5px;letter-spacing:-.5px;}
+.hero-sub{font-size:13px;opacity:.7;margin-bottom:22px;}
+.hero-search-box{position:relative;max-width:600px;}
+.hero-search-box input{width:100%;padding:13px 130px 13px 48px;border-radius:12px;border:none;font-size:14px;outline:none;font-family:'Inter',sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.22);color:var(--text-dark);}
+.hero-search-box input::placeholder{color:var(--text-light);}
+.hero-search-box .hsi{position:absolute;left:17px;top:50%;transform:translateY(-50%);color:var(--text-light);font-size:16px;}
+.hero-search-box .h-ai-badge{position:absolute;right:12px;top:50%;transform:translateY(-50%);}
+.ai-badge{display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#6B48FF,#00A3E0);color:white;padding:3px 9px;border-radius:10px;font-size:10.5px;font-weight:700;}
+.hero-stats{display:flex;gap:28px;margin-top:22px;}
+.hstat-val{font-size:22px;font-weight:800;}
+.hstat-lbl{font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.5px;}
+
+/* ─── SEARCH RESULTS ─────────────────────────────── */
+.search-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2000;align-items:flex-start;justify-content:center;padding-top:80px;}
+.search-overlay.show{display:flex;}
+.search-panel{background:white;border-radius:var(--radius-lg);width:100%;max-width:680px;max-height:80vh;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);overflow:hidden;}
+.sp-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+.sp-header input{flex:1;padding:10px 14px 10px 40px;border:1px solid var(--border);border-radius:8px;font-size:14px;outline:none;font-family:'Inter',sans-serif;}
+.sp-header input:focus{border-color:var(--primary);}
+.sp-si{position:absolute;left:34px;color:var(--text-light);}
+.sp-input-wrap{position:relative;flex:1;display:flex;align-items:center;}
+.sp-close{background:none;border:none;cursor:pointer;color:var(--text-med);font-size:18px;padding:4px;}
+.sp-close:hover{color:var(--text-dark);}
+.sp-body{overflow-y:auto;flex:1;}
+.sp-section{padding:12px 20px 4px;}
+.sp-section-lbl{font-size:10px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.sr-item{display:flex;align-items:flex-start;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer;transition:background .15s;margin-bottom:3px;}
+.sr-item:hover{background:var(--primary-light);}
+.sr-ico{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.sr-title{font-weight:600;font-size:13px;margin-bottom:2px;}
+.sr-meta{font-size:11px;color:var(--text-light);}
+.sr-tags{display:flex;gap:5px;margin-top:4px;}
+.sr-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;}
+.sr-action{margin-left:auto;font-size:12px;color:var(--primary);font-weight:600;white-space:nowrap;align-self:center;padding:4px 10px;border-radius:6px;border:1px solid var(--primary-light);}
+.sr-action:hover{background:var(--primary);color:white;}
+.sp-atlassian-cta{padding:14px 20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--bg);cursor:pointer;transition:background .15s;}
+.sp-atlassian-cta:hover{background:var(--primary-light);}
+.sp-atlassian-cta i{color:var(--primary);font-size:18px;}
+.sp-empty{text-align:center;padding:40px 20px;color:var(--text-light);}
+.sp-empty i{font-size:32px;margin-bottom:8px;display:block;}
+
+/* ─── GRID & CARDS ───────────────────────────────── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.mb20{margin-bottom:20px;}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);border:1px solid var(--border);overflow:hidden;}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--border);}
+.card-ttl{font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:7px;}
+.card-ttl i{color:var(--primary);}
+.card-lnk{font-size:12px;color:var(--primary);cursor:pointer;font-weight:500;text-decoration:none;display:flex;align-items:center;gap:4px;}
+.card-lnk:hover{text-decoration:underline;}
+.card-body{padding:18px;}
+
+/* ─── QUICK ACTIONS ──────────────────────────────── */
+.qa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.qa-card{background:var(--white);border-radius:var(--radius);padding:16px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;border:1px solid var(--border);transition:all .2s;box-shadow:var(--shadow-sm);}
+.qa-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-1px);}
+.qa-ico{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.ico-b{background:var(--primary-light);color:var(--primary);}
+.ico-g{background:#E8F8EF;color:var(--green);}
+.ico-o{background:#FEF3E8;color:var(--orange);}
+.ico-p{background:#F0EBFF;color:#6B48FF;}
+.qa-lbl{font-size:11px;color:var(--text-light);}
+.qa-ttl{font-weight:600;font-size:13px;margin-top:1px;}
+
+/* ─── FOLLOW THE SUN ─────────────────────────────── */
+.fts-card{background:var(--white);border-radius:var(--radius);padding:18px;border:1px solid var(--border);box-shadow:var(--shadow-sm);margin-bottom:20px;}
+.fts-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.fts-ttl{font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:7px;}
+.fts-live{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--green);font-weight:600;}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;display:inline-block;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(39,174,96,.4);}70%{box-shadow:0 0 0 8px rgba(39,174,96,0);}100%{box-shadow:0 0 0 0 rgba(39,174,96,0);}}
+.fts-regions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.fts-region{border-radius:var(--radius-sm);padding:12px;border:2px solid var(--border);transition:all .3s;}
+.fts-region.active{border-color:var(--green);background:#E8F8EF;}
+.fts-region.next{border-color:var(--yellow);background:#FEF9E7;}
+.fts-rlbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-light);margin-bottom:3px;}
+.fts-rname{font-size:14px;font-weight:700;}
+.fts-rtime{font-size:11.5px;color:var(--text-med);margin-top:2px;}
+.fts-rst{font-size:11px;font-weight:600;margin-top:7px;padding:3px 8px;border-radius:10px;display:inline-block;}
+.fts-region.active .fts-rst{background:var(--green);color:white;}
+.fts-region.next .fts-rst{background:var(--yellow);color:white;}
+.fts-region:not(.active):not(.next) .fts-rst{background:var(--border);color:var(--text-med);}
+.fts-bar{margin-top:14px;height:8px;background:var(--border);border-radius:4px;position:relative;overflow:hidden;}
+.fts-apac{position:absolute;left:0;top:0;bottom:0;width:33.3%;background:var(--accent);opacity:.5;}
+.fts-emea{position:absolute;left:33.3%;top:0;bottom:0;width:33.3%;background:var(--green);}
+.fts-ams{position:absolute;left:66.6%;top:0;bottom:0;width:33.4%;background:var(--orange);opacity:.5;}
+.fts-cursor{position:absolute;top:-3px;bottom:-3px;width:4px;background:white;border-radius:2px;box-shadow:0 0 6px rgba(0,0,0,.35);}
+.fts-ticks{display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--text-light);}
+
+/* ─── CASES TABLE ────────────────────────────────── */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{text-align:left;padding:9px 14px;font-size:10.5px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px;background:var(--bg);border-bottom:1px solid var(--border);}
+.tbl td{padding:11px 14px;border-bottom:1px solid var(--border);font-size:12.5px;vertical-align:middle;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tbody tr{cursor:pointer;transition:background .15s;}
+.tbl tbody tr:hover td{background:var(--primary-light);}
+.case-id{font-weight:700;color:var(--primary);font-size:11.5px;}
+.ptag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;margin-top:2px;}
+.prio{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:10px;}
+.pr-crit{background:#FDECEA;color:var(--red);} .pr-high{background:#FEF3E8;color:var(--orange);} .pr-med{background:#FEF9E7;color:var(--yellow);} .pr-low{background:#E8F8EF;color:var(--green);}
+.cstat{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:10px;}
+.cs-open{background:#EBF5FF;color:#2980B9;} .cs-prog{background:#FEF9E7;color:#C09010;} .cs-wait{background:#F0EBFF;color:#6B48FF;} .cs-res{background:#E8F8EF;color:var(--green);}
+.rtag{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--text-med);background:var(--bg);padding:3px 8px;border-radius:6px;}
+
+/* ─── KB CARDS ───────────────────────────────────── */
+.kb-card{display:flex;align-items:flex-start;gap:12px;padding:13px;border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer;transition:all .2s;margin-bottom:9px;text-decoration:none;color:inherit;}
+.kb-card:last-child{margin-bottom:0;}
+.kb-card:hover{border-color:var(--primary);background:var(--primary-light);}
+.kb-ico{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.kb-ttl{font-weight:600;font-size:13px;margin-bottom:3px;}
+.kb-meta{font-size:11px;color:var(--text-light);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.kb-meta span{display:flex;align-items:center;gap:3px;}
+
+/* ─── VIDEO CARDS ────────────────────────────────── */
+.vid-card{border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:all .2s;background:var(--white);}
+.vid-card:hover{box-shadow:var(--shadow);transform:translateY(-2px);}
+.vid-thumb{position:relative;height:108px;display:flex;align-items:center;justify-content:center;}
+.play-btn{width:42px;height:42px;background:rgba(255,255,255,.88);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:15px;box-shadow:0 4px 12px rgba(0,0,0,.2);transition:transform .2s;}
+.vid-card:hover .play-btn{transform:scale(1.1);}
+.vid-dur{position:absolute;bottom:7px;right:7px;background:rgba(0,0,0,.72);color:white;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:600;}
+.vid-info{padding:10px 12px;}
+.vid-ttl{font-weight:600;font-size:12px;margin-bottom:3px;}
+.vid-meta{font-size:11px;color:var(--text-light);}
+
+/* ─── COMMUNITY ──────────────────────────────────── */
+.comm-post{padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.comm-post:last-child{border-bottom:none;}
+.comm-post:hover{background:var(--primary-light);}
+.post-hdr{display:flex;align-items:center;gap:9px;margin-bottom:7px;}
+.post-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:white;flex-shrink:0;}
+.post-auth{font-weight:600;font-size:12.5px;}
+.post-co{font-size:10.5px;color:var(--text-light);}
+.post-time{margin-left:auto;font-size:10.5px;color:var(--text-light);}
+.post-body{font-size:13px;font-weight:500;margin-bottom:8px;}
+.post-ftr{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.pstat{display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--text-light);}
+.ans-tag{font-size:11px;background:#E8F8EF;color:var(--green);padding:2px 8px;border-radius:10px;font-weight:600;display:flex;align-items:center;gap:3px;}
+.prod-pill{font-size:10.5px;background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:10px;font-weight:600;}
+
+/* ─── STATUS ─────────────────────────────────────── */
+.st-row{display:flex;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);}
+.st-row:last-child{border-bottom:none;}
+.st-prod{font-weight:600;font-size:13px;flex:1;}
+.st-uptime{font-size:11.5px;color:var(--text-light);margin-right:14px;}
+.mini-bars{display:flex;gap:2px;margin-right:12px;}
+.mbar{width:4px;height:20px;border-radius:2px;}
+.st-badge{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:12px;white-space:nowrap;}
+.st-op{background:#E8F8EF;color:var(--green);} .st-deg{background:#FEF9E7;color:#C09010;} .st-mai{background:#F0F4F8;color:var(--text-med);} .st-down{background:#FDECEA;color:var(--red);}
+.inc-banner{padding:11px 18px;background:#FEF9E7;border-top:1px solid var(--border);font-size:12px;color:#C09010;}
+.status-loading{padding:30px;text-align:center;color:var(--text-light);}
+
+/* ─── DOCS ───────────────────────────────────────── */
+.doc-item{display:flex;align-items:center;gap:11px;padding:11px;border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer;transition:all .15s;margin-bottom:8px;text-decoration:none;color:inherit;}
+.doc-item:last-child{margin-bottom:0;}
+.doc-item:hover{border-color:var(--primary);background:var(--primary-light);}
+.doc-ico{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.d-pdf{background:#FDECEA;color:var(--red);} .d-doc{background:#EBF5FF;color:#2980B9;} .d-xls{background:#E8F8EF;color:var(--green);}
+.doc-name{font-weight:500;font-size:12.5px;}
+.doc-meta{font-size:11px;color:var(--text-light);margin-top:2px;}
+.doc-dl{margin-left:auto;color:var(--primary);font-size:14px;opacity:.6;}
+.doc-item:hover .doc-dl{opacity:1;}
+
+/* ─── TOOLING TABLE ──────────────────────────────── */
+.ttbl{width:100%;border-collapse:collapse;}
+.ttbl th{text-align:left;padding:9px 14px;font-size:10.5px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px;background:var(--bg);border-bottom:1px solid var(--border);}
+.ttbl td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:12.5px;vertical-align:top;}
+.ttbl tr:last-child td{border-bottom:none;}
+.tbadge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;display:inline-block;margin-bottom:4px;}
+.tb-atl{background:#DEEBFF;color:#0052CC;} .tb-aws{background:#FFF3CD;color:#9A6A00;} .tb-rec{background:#E8F8EF;color:var(--green);}
+.t-none{color:var(--text-light);font-size:12px;font-style:italic;}
+
+/* ─── NEW TICKET MODAL ───────────────────────────── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:3000;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal{background:white;border-radius:var(--radius-lg);width:100%;max-width:520px;padding:28px;box-shadow:var(--shadow-lg);}
+.modal-ttl{font-size:18px;font-weight:800;margin-bottom:4px;}
+.modal-sub{font-size:13px;color:var(--text-med);margin-bottom:22px;}
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px;}
+.prod-option{border:2px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;gap:8px;}
+.prod-option:hover{border-color:var(--primary);background:var(--primary-light);}
+.prod-option .pico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.prod-option .pn{font-weight:700;font-size:13.5px;}
+.prod-option .pd{font-size:11.5px;color:var(--text-med);}
+.modal-close{float:right;background:none;border:none;cursor:pointer;color:var(--text-med);font-size:20px;margin-top:-4px;}
+.modal-close:hover{color:var(--text-dark);}
+
+/* ─── CHATBOT ────────────────────────────────────── */
+.chat-fab{position:fixed;bottom:22px;right:22px;width:54px;height:54px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 18px rgba(0,90,142,.4);z-index:2000;transition:transform .2s;border:none;}
+.chat-fab:hover{transform:scale(1.08);}
+.chat-fab i{color:white;font-size:21px;}
+.chat-notif{position:absolute;top:-3px;right:-3px;width:19px;height:19px;background:var(--orange);border-radius:50%;color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid white;}
+.chat-win{position:fixed;bottom:86px;right:22px;width:360px;height:490px;background:white;border-radius:var(--radius-lg);box-shadow:0 16px 48px rgba(0,0,0,.18);z-index:1999;display:none;flex-direction:column;overflow:hidden;}
+.chat-win.open{display:flex;}
+.chat-hdr{background:linear-gradient(135deg,var(--primary-dark),var(--primary));padding:14px 18px;color:white;display:flex;align-items:center;gap:10px;}
+.chat-av{width:36px;height:36px;background:rgba(255,255,255,.18);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;}
+.chat-name{font-weight:700;font-size:13.5px;}
+.chat-st{font-size:11px;opacity:.8;}
+.chat-close{margin-left:auto;cursor:pointer;opacity:.7;font-size:17px;background:none;border:none;color:white;}
+.chat-close:hover{opacity:1;}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:11px;}
+.chat-msgs::-webkit-scrollbar{width:3px;}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--border);}
+.msg{display:flex;gap:7px;max-width:90%;}
+.msg.user{align-self:flex-end;flex-direction:row-reverse;}
+.msg-bbl{padding:9px 13px;border-radius:14px;font-size:12.5px;line-height:1.45;}
+.msg.bot .msg-bbl{background:var(--bg);color:var(--text-dark);border-bottom-left-radius:4px;}
+.msg.user .msg-bbl{background:var(--primary);color:white;border-bottom-right-radius:4px;}
+.msg-av{width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;align-self:flex-end;}
+.msg.bot .msg-av{background:var(--primary-light);color:var(--primary);}
+.msg.user .msg-av{background:var(--primary);color:white;font-weight:700;font-size:10px;}
+.typing{display:flex;gap:4px;align-items:center;padding:11px 13px;background:var(--bg);border-radius:14px;border-bottom-left-radius:4px;width:fit-content;}
+.tdot{width:6px;height:6px;background:var(--text-light);border-radius:50%;animation:tp 1.2s infinite;}
+.tdot:nth-child(2){animation-delay:.2s;} .tdot:nth-child(3){animation-delay:.4s;}
+@keyframes tp{0%,60%,100%{opacity:.3;transform:scale(1);}30%{opacity:1;transform:scale(1.2);}}
+.chat-suggs{display:flex;flex-wrap:wrap;gap:5px;padding:0 14px 8px;}
+.csugg{padding:5px 11px;border-radius:14px;border:1px solid var(--primary);color:var(--primary);font-size:11.5px;cursor:pointer;transition:all .15s;background:none;font-family:'Inter',sans-serif;}
+.csugg:hover{background:var(--primary);color:white;}
+.chat-inp{display:flex;gap:7px;padding:10px 14px;border-top:1px solid var(--border);align-items:center;}
+.chat-inp input{flex:1;padding:8px 13px;border-radius:20px;border:1px solid var(--border);font-size:12.5px;outline:none;font-family:'Inter',sans-serif;transition:border-color .2s;}
+.chat-inp input:focus{border-color:var(--primary);}
+.chat-send{width:34px;height:34px;background:var(--primary);border:none;border-radius:50%;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0;}
+.chat-send:hover{background:var(--primary-dark);}
+.msg-bbl a{color:var(--accent);text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══════════════════════════════════ -->
+<header class="header">
+  <div class="logo" onclick="window.location.reload()">
+    <div class="logo-badge">a</div>accesso
+  </div>
+  <div class="h-search-wrap">
+    <i class="fa fa-search si"></i>
+    <input id="hSearch" type="text" placeholder="Search knowledge base, cases, community…" autocomplete="off" onfocus="openSearch(this.value)" oninput="liveSearch(this.value)">
+  </div>
+  <div class="h-actions">
+    <button class="hbtn" title="Notifications"><i class="fa fa-bell"></i><span class="notif-dot"></span></button>
+    <button class="hbtn" title="Help"><i class="fa fa-circle-question"></i></button>
+    <a class="hbtn" href="https://accesso.atlassian.net" target="_blank" title="Open Atlassian"><i class="fa fa-external-link"></i></a>
+    <div class="u-av" title="Jason Ashwell">JA</div>
+  </div>
+</header>
+
+<!-- ═══ SEARCH OVERLAY ═══════════════════════════ -->
+<div class="search-overlay" id="searchOverlay" onclick="closeSearchIfOutside(event)">
+  <div class="search-panel" id="searchPanel">
+    <div class="sp-header">
+      <div class="sp-input-wrap">
+        <i class="fa fa-search sp-si"></i>
+        <input id="spInput" type="text" placeholder="Search across all products, knowledge base and community…" oninput="liveSearch(this.value)" onkeydown="handleSearchKey(event)" autofocus>
+      </div>
+      <button class="sp-close" onclick="closeSearch()"><i class="fa fa-xmark"></i></button>
+    </div>
+    <div class="sp-body" id="spBody">
+      <div class="sp-empty"><i class="fa fa-magnifying-glass"></i>Start typing to search across all accesso content</div>
+    </div>
+    <div class="sp-atlassian-cta" id="atlassianCTA" onclick="searchInAtlassian()" style="display:none">
+      <i class="fa fa-atlassian" style="font-size:20px"></i>
+      <div>
+        <div style="font-weight:600;font-size:13px">Search all of Atlassian</div>
+        <div style="font-size:11px;color:var(--text-light)">Search JSM cases and Confluence knowledge base →</div>
+      </div>
+      <i class="fa fa-arrow-right" style="margin-left:auto;color:var(--primary)"></i>
+    </div>
+  </div>
+</div>
+
+<!-- Modal removed — all links go directly via SSO -->
+
+<!-- ═══ SIDEBAR ═══════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sb-sec">
+    <div class="sb-lbl">Navigation</div>
+    <button class="nav-item active" onclick="navClick(this)"><i class="fa fa-house"></i> Home</button>
+    <button class="nav-item" onclick="navClick(this);window.open('https://accesso.atlassian.net/servicedesk/customer/user/requests','_blank')">
+      <i class="fa fa-ticket"></i> My Cases <span class="nav-badge">3</span>
+    </button>
+    <button class="nav-item" onclick="navClick(this);window.open('https://accesso.atlassian.net/wiki','_blank')">
+      <i class="fa fa-book-open"></i> Knowledge Base
+    </button>
+    <button class="nav-item" onclick="navClick(this)"><i class="fa fa-users"></i> Community <span class="nav-badge ora">2</span></button>
+    <button class="nav-item" onclick="navClick(this);window.open('https://accesso-freedom-us.statuspage.io/','_blank')">
+      <i class="fa fa-signal"></i> System Status
+    </button>
+    <button class="nav-item" onclick="navClick(this)"><i class="fa fa-download"></i> Downloads</button>
+    <button class="nav-item" onclick="navClick(this)"><i class="fa fa-lightbulb"></i> Product Ideas</button>
+  </div>
+  <hr class="sb-div">
+  <div class="sb-sec">
+    <div class="sb-lbl">My Products</div>
+    <button class="prod-btn active" onclick="switchProd('all',this)">
+      <div class="pdot" style="background:var(--primary)"></div>
+      <span class="pname">All Products</span>
+    </button>
+    <button class="prod-btn" onclick="switchProd('paradox',this)">
+      <div class="pdot" style="background:#6B48FF"></div>
+      <span class="pname">Paradox</span>
+      <div class="sdot s-op" id="dot-paradox"></div>
+    </button>
+    <button class="prod-btn" onclick="switchProd('freedom',this)">
+      <div class="pdot" style="background:#27AE60"></div>
+      <span class="pname">Freedom</span>
+      <div class="sdot s-deg" id="dot-freedom"></div>
+    </button>
+    <button class="prod-btn" onclick="switchProd('passport',this)">
+      <div class="pdot" style="background:#00A3E0"></div>
+      <span class="pname">Passport US</span>
+      <div class="sdot s-op" id="dot-passport"></div>
+    </button>
+    <button class="prod-btn" onclick="switchProd('gps',this)">
+      <div class="pdot" style="background:#F5821F"></div>
+      <span class="pname">Global Payments</span>
+      <div class="sdot s-maint" id="dot-gps"></div>
+    </button>
+  </div>
+  <hr class="sb-div">
+  <div class="sb-sec">
+    <div class="sb-lbl">Support</div>
+    <button class="nav-item" onclick="window.open('https://accesso.atlassian.net/servicedesk/customer/portals','_blank')"><i class="fa fa-plus"></i> New Support Request</button>
+    <button class="nav-item" onclick="window.open('https://accesso.atlassian.net/servicedesk/customer/user/requests','_blank')"><i class="fa fa-inbox"></i> View All Cases</button>
+    <button class="nav-item"><i class="fa fa-phone"></i> Emergency Line</button>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ══════════════════════════════════════ -->
+<main class="main">
+
+  <!-- HERO -->
+  <div class="hero mb20">
+    <div class="hero-greeting">Good morning, Jason 👋</div>
+    <div class="hero-title">How can we help you today?</div>
+    <div class="hero-sub">Search across all accesso products, knowledge base and community answers</div>
+    <div class="hero-search-box">
+      <i class="fa fa-search hsi"></i>
+      <input type="text" id="heroSearch" placeholder="e.g. 'queue hold not saving' or 'POS reconciliation steps'…" autocomplete="off"
+        onfocus="openSearch(this.value)" oninput="liveSearch(this.value)">
+      <div class="h-ai-badge"><span class="ai-badge"><i class="fa fa-wand-magic-sparkles"></i> Powered by Fuse.js + Atlassian</span></div>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hstat-val">3</div><div class="hstat-lbl">Open Cases</div></div>
+      <div><div class="hstat-val" style="color:#7FCFEF">247</div><div class="hstat-lbl">KB Articles</div></div>
+      <div><div class="hstat-val" style="color:#7FCFEF">1,842</div><div class="hstat-lbl">Community Members</div></div>
+      <div><div class="hstat-val" style="color:#7FCFEF" id="deflectionStat">78%</div><div class="hstat-lbl">First Contact Fix</div></div>
+    </div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="qa-grid mb20">
+    <div class="qa-card" onclick="window.open('https://accesso.atlassian.net/servicedesk/customer/portals','_blank')">
+      <div class="qa-ico ico-b"><i class="fa fa-plus"></i></div>
+      <div><div class="qa-lbl">Get Help</div><div class="qa-ttl">New Support Request</div></div>
+    </div>
+    <div class="qa-card" onclick="window.open('https://accesso.atlassian.net/wiki','_blank')">
+      <div class="qa-ico ico-g"><i class="fa fa-magnifying-glass"></i></div>
+      <div><div class="qa-lbl">Self-Service</div><div class="qa-ttl">Browse Knowledge Base</div></div>
+    </div>
+    <div class="qa-card">
+      <div class="qa-ico ico-p"><i class="fa fa-users"></i></div>
+      <div><div class="qa-lbl">Peer Support</div><div class="qa-ttl">Post to Community</div></div>
+    </div>
+    <div class="qa-card" onclick="window.open('https://accesso.atlassian.net/servicedesk/customer/user/requests','_blank')">
+      <div class="qa-ico ico-o"><i class="fa fa-clock-rotate-left"></i></div>
+      <div><div class="qa-lbl">Track</div><div class="qa-ttl">View All My Cases</div></div>
+    </div>
+  </div>
+
+  <!-- FOLLOW THE SUN -->
+  <div class="fts-card mb20">
+    <div class="fts-hdr">
+      <div class="fts-ttl"><i class="fa fa-globe" style="color:var(--primary)"></i> Follow-the-Sun Coverage</div>
+      <div class="fts-live"><span class="pulse"></span> Live Coverage Active</div>
+    </div>
+    <div class="fts-regions">
+      <div class="fts-region" id="r-apac">
+        <div class="fts-rlbl">🇦🇺 APAC</div>
+        <div class="fts-rname">Sydney / Singapore</div>
+        <div class="fts-rtime" id="t-apac">—</div>
+        <div class="fts-rst" id="s-apac">—</div>
+      </div>
+      <div class="fts-region" id="r-emea">
+        <div class="fts-rlbl">🇬🇧 EMEA</div>
+        <div class="fts-rname">London / Amsterdam</div>
+        <div class="fts-rtime" id="t-emea">—</div>
+        <div class="fts-rst" id="s-emea">—</div>
+      </div>
+      <div class="fts-region" id="r-americas">
+        <div class="fts-rlbl">🇺🇸 Americas</div>
+        <div class="fts-rname">Orlando / New York</div>
+        <div class="fts-rtime" id="t-americas">—</div>
+        <div class="fts-rst" id="s-americas">—</div>
+      </div>
+    </div>
+    <div class="fts-bar">
+      <div class="fts-apac"></div><div class="fts-emea"></div><div class="fts-ams"></div>
+      <div class="fts-cursor" id="ftsCursor"></div>
+    </div>
+    <div class="fts-ticks"><span>00:00 UTC</span><span>08:00 UTC</span><span>17:00 UTC</span><span>24:00 UTC</span></div>
+  </div>
+
+  <!-- CASES + KB -->
+  <div class="grid-2 mb20">
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-ttl"><i class="fa fa-ticket"></i> Active Cases</div>
+        <a class="card-lnk" href="https://accesso.atlassian.net/servicedesk/customer/user/requests" target="_blank"><i class="fa fa-external-link"></i> View all in Jira</a>
+      </div>
+      <table class="tbl">
+        <thead><tr><th>Case</th><th>Subject</th><th>Status</th><th>Priority</th><th>Team</th></tr></thead>
+        <tbody>
+          <tr onclick="window.open('https://accesso.atlassian.net/servicedesk/customer/portal/63','_blank')">
+            <td><div class="case-id">ACC-1847</div><div class="ptag" style="background:#F0EBFF;color:#6B48FF">Paradox</div></td>
+            <td style="max-width:150px">Queue hold config not saving after update</td>
+            <td><span class="cstat cs-prog"><i class="fa fa-circle-half-stroke"></i> In Progress</span></td>
+            <td><span class="prio pr-high">● High</span></td>
+            <td><span class="rtag">🇬🇧 EMEA</span></td>
+          </tr>
+          <tr onclick="window.open('https://accesso.atlassian.net/servicedesk/customer/portal/53','_blank')">
+            <td><div class="case-id">ACC-1831</div><div class="ptag" style="background:#E8F8EF;color:#27AE60">Freedom</div></td>
+            <td style="max-width:150px">POS terminal offline after v4.2 patch</td>
+            <td><span class="cstat cs-wait"><i class="fa fa-clock"></i> Awaiting Info</span></td>
+            <td><span class="prio pr-crit">● Critical</span></td>
+            <td><span class="rtag">🇦🇺 APAC</span></td>
+          </tr>
+          <tr onclick="window.open('https://accesso.atlassian.net/servicedesk/customer/portal/63','_blank')">
+            <td><div class="case-id">ACC-1799</div><div class="ptag" style="background:#EBF5FF;color:#2980B9">Passport US</div></td>
+            <td style="max-width:150px">Season pass validation error at turnstile</td>
+            <td><span class="cstat cs-open"><i class="fa fa-circle-dot"></i> Open</span></td>
+            <td><span class="prio pr-med">● Medium</span></td>
+            <td><span class="rtag">🇺🇸 Americas</span></td>
+          </tr>
+          <tr onclick="window.open('https://accesso.atlassian.net/servicedesk/customer/portal/37','_blank')">
+            <td><div class="case-id">ACC-1756</div><div class="ptag" style="background:#FEF3E8;color:#F5821F">GPS</div></td>
+            <td style="max-width:150px">Payment gateway timeout on high volume</td>
+            <td><span class="cstat cs-res"><i class="fa fa-circle-check"></i> Resolved</span></td>
+            <td><span class="prio pr-low">● Low</span></td>
+            <td><span class="rtag">🇬🇧 EMEA</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-ttl"><i class="fa fa-book-open"></i> Top Knowledge Articles</div>
+        <a class="card-lnk" href="https://accesso.atlassian.net/wiki" target="_blank"><i class="fa fa-external-link"></i> Open Confluence</a>
+      </div>
+      <div class="card-body" style="padding:12px 14px">
+        <a class="kb-card" href="https://accesso.atlassian.net/wiki/search?text=virtual+queue+configuration" target="_blank">
+          <div class="kb-ico"><i class="fa fa-layer-group"></i></div>
+          <div><div class="kb-ttl">Configuring virtual queues for peak periods</div>
+          <div class="kb-meta"><span><i class="fa fa-tag"></i> Paradox</span><span><i class="fa fa-eye"></i> 1,243</span><span><i class="fa fa-thumbs-up"></i> 98%</span></div></div>
+        </a>
+        <a class="kb-card" href="https://accesso.atlassian.net/wiki/search?text=freedom+POS+reconciliation" target="_blank">
+          <div class="kb-ico" style="background:#E8F8EF;color:#27AE60"><i class="fa fa-cash-register"></i></div>
+          <div><div class="kb-ttl">Freedom POS: End of day reconciliation guide</div>
+          <div class="kb-meta"><span><i class="fa fa-tag"></i> Freedom</span><span><i class="fa fa-eye"></i> 876</span><span><i class="fa fa-thumbs-up"></i> 95%</span></div></div>
+        </a>
+        <a class="kb-card" href="https://accesso.atlassian.net/wiki/search?text=season+pass+validation" target="_blank">
+          <div class="kb-ico" style="background:#EBF5FF;color:#2980B9"><i class="fa fa-id-card"></i></div>
+          <div><div class="kb-ttl">Season pass setup and validation rules — Passport US</div>
+          <div class="kb-meta"><span><i class="fa fa-tag"></i> Passport US</span><span><i class="fa fa-eye"></i> 654</span><span><i class="fa fa-thumbs-up"></i> 92%</span></div></div>
+        </a>
+        <a class="kb-card" href="https://accesso.atlassian.net/wiki/search?text=payment+gateway+timeout" target="_blank">
+          <div class="kb-ico" style="background:#FEF3E8;color:#F5821F"><i class="fa fa-credit-card"></i></div>
+          <div><div class="kb-ttl">Payment gateway integration &amp; timeout configuration</div>
+          <div class="kb-meta"><span><i class="fa fa-tag"></i> Global Payments</span><span><i class="fa fa-eye"></i> 512</span><span><i class="fa fa-thumbs-up"></i> 91%</span></div></div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEOS + COMMUNITY -->
+  <div class="grid-2 mb20">
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-ttl"><i class="fa fa-circle-play"></i> Training Videos</div>
+        <a class="card-lnk">View all 34 →</a>
+      </div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="vid-card" onclick="window.open('https://www.youtube.com/results?search_query=accesso+paradox+queuing','_blank')">
+            <div class="vid-thumb" style="background:linear-gradient(135deg,#6B48FF,#9B78FF)">
+              <div class="play-btn"><i class="fa fa-play" style="margin-left:2px"></i></div>
+              <div class="vid-dur">12:34</div>
+            </div>
+            <div class="vid-info"><div class="vid-ttl">Getting started with Paradox queuing</div><div class="vid-meta"><i class="fa fa-eye"></i> 2,341 views</div></div>
+          </div>
+          <div class="vid-card" onclick="window.open('https://www.youtube.com/results?search_query=accesso+freedom+POS','_blank')">
+            <div class="vid-thumb" style="background:linear-gradient(135deg,#27AE60,#52D98A)">
+              <div class="play-btn"><i class="fa fa-play" style="margin-left:2px"></i></div>
+              <div class="vid-dur">08:21</div>
+            </div>
+            <div class="vid-info"><div class="vid-ttl">Freedom POS onboarding walkthrough</div><div class="vid-meta"><i class="fa fa-eye"></i> 1,897 views</div></div>
+          </div>
+          <div class="vid-card" onclick="window.open('https://www.youtube.com/results?search_query=accesso+passport+ticketing','_blank')">
+            <div class="vid-thumb" style="background:linear-gradient(135deg,#005A8E,#00A3E0)">
+              <div class="play-btn"><i class="fa fa-play" style="margin-left:2px"></i></div>
+              <div class="vid-dur">15:07</div>
+            </div>
+            <div class="vid-info"><div class="vid-ttl">Passport US: Admin panel overview</div><div class="vid-meta"><i class="fa fa-eye"></i> 1,204 views</div></div>
+          </div>
+          <div class="vid-card" onclick="window.open('https://www.youtube.com/results?search_query=accesso+global+payments','_blank')">
+            <div class="vid-thumb" style="background:linear-gradient(135deg,#F5821F,#FAB060)">
+              <div class="play-btn"><i class="fa fa-play" style="margin-left:2px"></i></div>
+              <div class="vid-dur">06:48</div>
+            </div>
+            <div class="vid-info"><div class="vid-ttl">Global Payments: Reconciliation guide</div><div class="vid-meta"><i class="fa fa-eye"></i> 834 views</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-ttl"><i class="fa fa-comments"></i> Community Discussions</div>
+        <a class="card-lnk">Visit community →</a>
+      </div>
+      <div>
+        <div class="comm-post">
+          <div class="post-hdr">
+            <div class="post-av" style="background:linear-gradient(135deg,#6B48FF,#9B78FF)">SM</div>
+            <div><div class="post-auth">Sarah Mitchell</div><div class="post-co">Alton Towers Resort</div></div>
+            <div class="post-time">2h ago</div>
+          </div>
+          <div class="post-body">Best practices for queue hold management during peak periods — any tips?</div>
+          <div class="post-ftr">
+            <div class="pstat"><i class="fa fa-eye"></i> 143</div><div class="pstat"><i class="fa fa-comment"></i> 12</div><div class="pstat"><i class="fa fa-heart"></i> 8</div>
+            <div class="ans-tag"><i class="fa fa-check"></i> Answered</div><div class="prod-pill" style="margin-left:6px">Paradox</div>
+          </div>
+        </div>
+        <div class="comm-post">
+          <div class="post-hdr">
+            <div class="post-av" style="background:linear-gradient(135deg,#27AE60,#52D98A)">TK</div>
+            <div><div class="post-auth">Tom Kavanagh</div><div class="post-co">Merlin Entertainments</div></div>
+            <div class="post-time">5h ago</div>
+          </div>
+          <div class="post-body">Freedom POS — tips for multi-lane setup across multiple F&amp;B outlets?</div>
+          <div class="post-ftr">
+            <div class="pstat"><i class="fa fa-eye"></i> 87</div><div class="pstat"><i class="fa fa-comment"></i> 6</div><div class="pstat"><i class="fa fa-heart"></i> 4</div>
+            <div class="prod-pill" style="margin-left:auto">Freedom</div>
+          </div>
+        </div>
+        <div class="comm-post">
+          <div class="post-hdr">
+            <div class="post-av" style="background:linear-gradient(135deg,#005A8E,#00A3E0)">AL</div>
+            <div><div class="post-auth">Amy Lin</div><div class="post-co">Six Flags Entertainment</div></div>
+            <div class="post-time">1d ago</div>
+          </div>
+          <div class="post-body">Slower load times on Passport US ticket scan this week — is anyone else seeing this?</div>
+          <div class="post-ftr">
+            <div class="pstat"><i class="fa fa-eye"></i> 312</div><div class="pstat"><i class="fa fa-comment"></i> 24</div><div class="pstat"><i class="fa fa-heart"></i> 19</div>
+            <div class="ans-tag"><i class="fa fa-check"></i> Answered</div><div class="prod-pill" style="margin-left:6px">Passport US</div>
+          </div>
+        </div>
+        <div style="padding:12px 14px;border-top:1px solid var(--border)">
+          <input type="text" placeholder="Ask the community a question…" style="width:100%;padding:9px 14px;border-radius:20px;border:1px solid var(--border);font-size:12.5px;outline:none;font-family:'Inter',sans-serif;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATUS + DOCS -->
+  <div class="grid-2 mb20">
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-ttl"><i class="fa fa-signal"></i> System Status</div>
+        <a class="card-lnk" href="https://accesso-freedom-us.statuspage.io/" target="_blank" style="display:flex;align-items:center;gap:5px"><span class="pulse" style="width:6px;height:6px"></span> Live · accesso Statuspage</a>
+      </div>
+      <div id="statusBody" class="status-loading"><i class="fa fa-spinner fa-spin"></i> Loading live status…</div>
+      <div id="statusIncident" style="display:none"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-ttl"><i class="fa fa-folder-open"></i> Recent Documents</div>
+        <a class="card-lnk" href="https://accesso.atlassian.net/wiki" target="_blank">Open Confluence →</a>
+      </div>
+      <div class="card-body" style="padding:12px 14px">
+        <a class="doc-item" href="https://accesso.atlassian.net/wiki/search?text=customer+portal+requirements" target="_blank">
+          <div class="doc-ico d-doc"><i class="fa fa-file-word"></i></div>
+          <div><div class="doc-name">accesso Customer Portal Requirements</div><div class="doc-meta">DOCX · Updated today · accesso Internal</div></div>
+          <div class="doc-dl"><i class="fa fa-arrow-up-right-from-square"></i></div>
+        </a>
+        <a class="doc-item" href="https://accesso.atlassian.net/wiki/search?text=Paradox+API+integration" target="_blank">
+          <div class="doc-ico d-pdf"><i class="fa fa-file-pdf"></i></div>
+          <div><div class="doc-name">Paradox API Integration Guide v3.2</div><div class="doc-meta">PDF · 4.2 MB · Updated Feb 2026</div></div>
+          <div class="doc-dl"><i class="fa fa-arrow-up-right-from-square"></i></div>
+        </a>
+        <a class="doc-item" href="https://accesso.atlassian.net/wiki/search?text=Freedom+POS+release+notes" target="_blank">
+          <div class="doc-ico d-pdf"><i class="fa fa-file-pdf"></i></div>
+          <div><div class="doc-name">Freedom POS v4.2 Release Notes</div><div class="doc-meta">PDF · 1.8 MB · Updated Mar 2026</div></div>
+          <div class="doc-dl"><i class="fa fa-arrow-up-right-from-square"></i></div>
+        </a>
+        <a class="doc-item" href="https://accesso.atlassian.net/wiki/search?text=Passport+season+pass+setup" target="_blank">
+          <div class="doc-ico d-doc"><i class="fa fa-file-word"></i></div>
+          <div><div class="doc-name">Passport US Season Pass Setup Guide</div><div class="doc-meta">DOCX · 2.1 MB · Updated Jan 2026</div></div>
+          <div class="doc-dl"><i class="fa fa-arrow-up-right-from-square"></i></div>
+        </a>
+        <a class="doc-item" href="https://accesso.atlassian.net/wiki/search?text=Global+Payment+Services+SLA" target="_blank">
+          <div class="doc-ico d-xls"><i class="fa fa-file-excel"></i></div>
+          <div><div class="doc-name">Global Payment Services SLA Reference</div><div class="doc-meta">XLSX · 0.9 MB · Updated Dec 2025</div></div>
+          <div class="doc-dl"><i class="fa fa-arrow-up-right-from-square"></i></div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOOLING STACK -->
+  <div class="card mb20">
+    <div class="card-hdr">
+      <div class="card-ttl"><i class="fa fa-screwdriver-wrench"></i> Recommended Tooling Stack</div>
+      <span style="font-size:11.5px;color:var(--text-light)">Based on your Atlassian &amp; AWS subscriptions + best-of-breed recommendations</span>
+    </div>
+    <table class="ttbl">
+      <thead><tr><th style="width:16%">Capability</th><th style="width:27%">Atlassian Option</th><th style="width:27%">AWS Option</th><th style="width:30%">Recommendation</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Portal &amp; Ticketing</strong><br><span style="font-size:11px;color:var(--text-light)">Core case management</span></td>
+          <td><div class="tbadge tb-atl">Atlassian</div><br><strong>Jira Service Management</strong> — already live on <a href="https://accesso.atlassian.net" target="_blank" style="color:var(--primary)">accesso.atlassian.net</a><br><span style="font-size:11px;color:var(--text-light)">Solid backend engine; customer portal UX is limited</span></td>
+          <td><div class="tbadge tb-aws">AWS</div><br><strong>Amazon Connect</strong><br><span style="font-size:11px;color:var(--text-light)">Strong for voice; weak as a self-service portal</span></td>
+          <td><div class="tbadge tb-rec">✓ Keep JSM</div><br>Retain JSM as the backend. Layer a purpose-built portal over it — or evaluate <strong>Freshdesk / Zendesk</strong> for superior customer UX.</td>
+        </tr>
+        <tr>
+          <td><strong>Knowledge Base</strong><br><span style="font-size:11px;color:var(--text-light)">Customer-facing content</span></td>
+          <td><div class="tbadge tb-atl">Atlassian</div><br><a href="https://accesso.atlassian.net/wiki" target="_blank" style="color:var(--primary);font-weight:600">Confluence</a><br><span style="font-size:11px;color:var(--text-light)">Good internally; limited customer UX &amp; search</span></td>
+          <td><span class="t-none">No native option</span></td>
+          <td><div class="tbadge tb-rec">✓ Replace for customers</div><br><strong>Document360</strong> or <strong>Guru</strong> — purpose-built for customer-facing KB with versioning &amp; AI suggestions.</td>
+        </tr>
+        <tr>
+          <td><strong>AI Chatbot</strong><br><span style="font-size:11px;color:var(--text-light)">Tier 0 deflection</span></td>
+          <td><span class="t-none">No Atlassian product</span></td>
+          <td><div class="tbadge tb-aws">AWS</div><br><strong>Amazon Q / Amazon Lex</strong><br><span style="font-size:11px;color:var(--text-light)">Good NLU; heavy config effort required</span></td>
+          <td><div class="tbadge tb-rec">✓ Recommended</div><br><strong>Intercom</strong> or <strong>Zendesk AI</strong> for out-of-box quality. Use <strong>Amazon Q for Business</strong> if AWS coupling is required.</td>
+        </tr>
+        <tr>
+          <td><strong>AI Search</strong><br><span style="font-size:11px;color:var(--text-light)">Semantic / intent search</span></td>
+          <td><span class="t-none">No Atlassian product</span></td>
+          <td><div class="tbadge tb-aws">AWS</div><br><strong>Amazon Kendra</strong><br><span style="font-size:11px;color:var(--text-light)">Enterprise-grade; complex to tune</span></td>
+          <td><div class="tbadge tb-rec">✓ Recommended</div><br><strong>Coveo</strong> — integrates natively with JSM; purpose-built for support deflection.</td>
+        </tr>
+        <tr>
+          <td><strong>Community</strong><br><span style="font-size:11px;color:var(--text-light)">Peer-to-peer support</span></td>
+          <td><span class="t-none">No Atlassian product</span></td>
+          <td><span class="t-none">No AWS product</span></td>
+          <td><div class="tbadge tb-rec">✓ New Capability</div><br><strong>Higher Logic Vanilla</strong> or <strong>Khoros</strong> for enterprise. <strong>Discourse</strong> as a lighter open-source option.</td>
+        </tr>
+        <tr>
+          <td><strong>Status Page</strong><br><span style="font-size:11px;color:var(--text-light)">Incident comms</span></td>
+          <td><div class="tbadge tb-atl">Atlassian</div><br><a href="https://accesso-freedom-us.statuspage.io/" target="_blank" style="color:var(--primary);font-weight:600">Statuspage ✓ Live</a><br><span style="font-size:11px;color:var(--green)">Already active — best-in-class</span></td>
+          <td><span class="t-none">No native option</span></td>
+          <td><div class="tbadge tb-rec">✓ Already Available</div><br><strong>Atlassian Statuspage</strong> is live. Expand to all four products and embed in this portal.</td>
+        </tr>
+        <tr>
+          <td><strong>Analytics</strong><br><span style="font-size:11px;color:var(--text-light)">Portal &amp; support insight</span></td>
+          <td><span class="t-none">JSM native reports only</span></td>
+          <td><div class="tbadge tb-aws">AWS</div><br><strong>Amazon QuickSight</strong><br><span style="font-size:11px;color:var(--text-light)">Good BI; limited portal-behaviour analytics</span></td>
+          <td><div class="tbadge tb-rec">✓ Recommended</div><br><strong>Amplitude</strong> or <strong>Mixpanel</strong> for portal behaviour + <strong>QuickSight</strong> for SLA &amp; support reporting.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<!-- ═══ CHATBOT ════════════════════════════════════ -->
+<div class="chat-win" id="chatWin">
+  <div class="chat-hdr">
+    <div class="chat-av"><i class="fa fa-robot"></i></div>
+    <div>
+      <div class="chat-name">Axel — accesso AI Assistant</div>
+      <div class="chat-st"><span class="pulse" style="width:6px;height:6px;display:inline-block;margin-right:3px"></span>Online · Powered by Amazon Q</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()"><i class="fa fa-xmark"></i></button>
+  </div>
+  <div class="chat-msgs" id="chatMsgs">
+    <div class="msg bot">
+      <div class="msg-av"><i class="fa fa-robot"></i></div>
+      <div class="msg-bbl">Hi Jason! I'm <strong>Axel</strong>. I can help across <strong>Paradox, Freedom, Passport US</strong> and <strong>Global Payments</strong>, or open the right Atlassian portal for you. What do you need?</div>
+    </div>
+  </div>
+  <div class="chat-suggs" id="chatSuggs">
+    <button class="csugg" onclick="sendSugg(this)">Queue hold issue</button>
+    <button class="csugg" onclick="sendSugg(this)">POS offline after update</button>
+    <button class="csugg" onclick="sendSugg(this)">Track my cases</button>
+    <button class="csugg" onclick="sendSugg(this)">Raise a new ticket</button>
+  </div>
+  <div class="chat-inp">
+    <input id="chatIn" type="text" placeholder="Ask me anything…" onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chat-send" onclick="sendChat()"><i class="fa fa-paper-plane"></i></button>
+  </div>
+</div>
+<button class="chat-fab" onclick="toggleChat()">
+  <i class="fa fa-comment-dots"></i>
+  <div class="chat-notif" id="chatNotif">1</div>
+</button>
+
+<script>
+const ATLASSIAN = 'https://accesso.atlassian.net';
+const STATUSPAGE = 'https://accesso-freedom-us.statuspage.io';
+
+// ── FOLLOW THE SUN ────────────────────────────────
+function updateFTS(){
+  const now=new Date(), h=now.getUTCHours(), m=now.getUTCMinutes(), dec=h+m/60;
+  let active='emea';
+  if(dec>=23||dec<8) active='apac';
+  else if(dec>=17) active='americas';
+  const order=['apac','emea','americas'];
+  const nextR=order[(order.indexOf(active)+1)%3];
+  const fmt=(tz)=>now.toLocaleTimeString('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit'});
+  document.getElementById('t-apac').textContent=fmt('Australia/Sydney')+' AEST';
+  document.getElementById('t-emea').textContent=fmt('Europe/London')+' GMT/BST';
+  document.getElementById('t-americas').textContent=fmt('America/New_York')+' EST';
+  order.forEach(r=>{
+    const el=document.getElementById('r-'+r), st=document.getElementById('s-'+r);
+    el.classList.remove('active','next');
+    if(r===active){el.classList.add('active');st.textContent='● Active Now';}
+    else if(r===nextR){el.classList.add('next');st.textContent='◌ On Deck';}
+    else st.textContent='○ Off Shift';
+  });
+  document.getElementById('ftsCursor').style.left=(dec/24*100)+'%';
+}
+updateFTS(); setInterval(updateFTS,30000);
+
+// ── LIVE STATUSPAGE ───────────────────────────────
+async function fetchStatus(){
+  try{
+    const [statusRes, compRes, incRes] = await Promise.all([
+      fetch(`${STATUSPAGE}/api/v2/status.json`),
+      fetch(`${STATUSPAGE}/api/v2/components.json`),
+      fetch(`${STATUSPAGE}/api/v2/incidents/unresolved.json`)
+    ]);
+    const {status} = await statusRes.json();
+    const {components} = await compRes.json();
+    const {incidents} = await incRes.json();
+    renderStatus(status, components, incidents);
+  } catch(e){
+    renderStatusFallback();
+  }
+}
+
+function indicatorClass(ind){
+  if(!ind||ind==='operational') return 'st-op';
+  if(ind==='degraded_performance'||ind==='partial_outage') return 'st-deg';
+  if(ind==='major_outage') return 'st-down';
+  return 'st-mai';
+}
+function indicatorLabel(ind){
+  if(!ind||ind==='operational') return '<i class="fa fa-circle-check"></i> Operational';
+  if(ind==='degraded_performance') return '<i class="fa fa-triangle-exclamation"></i> Degraded';
+  if(ind==='partial_outage') return '<i class="fa fa-circle-exclamation"></i> Partial Outage';
+  if(ind==='major_outage') return '<i class="fa fa-xmark-circle"></i> Major Outage';
+  if(ind==='under_maintenance') return '<i class="fa fa-wrench"></i> Maintenance';
+  return ind;
+}
+function barColor(ind){
+  if(!ind||ind==='operational') return 'var(--green)';
+  if(ind.includes('partial')||ind.includes('degraded')) return 'var(--yellow)';
+  if(ind.includes('major')) return 'var(--red)';
+  return 'var(--text-light)';
+}
+
+function renderStatus(status, components, incidents){
+  const body = document.getElementById('statusBody');
+  const comps = components.filter(c=>!c.group);
+  if(!comps.length){renderStatusFallback();return;}
+  body.className='card-body';body.style.padding='4px 18px';
+  body.innerHTML=comps.slice(0,5).map(c=>`
+    <div class="st-row">
+      <div class="st-prod">${c.name}</div>
+      <div class="mini-bars">${Array(5).fill(0).map((_,i)=>`<div class="mbar" style="background:${i<4||c.status==='operational'?barColor(c.status):'var(--text-light)'}"></div>`).join('')}</div>
+      <div class="st-badge ${indicatorClass(c.status)}">${indicatorLabel(c.status)}</div>
+    </div>`).join('');
+
+  if(incidents && incidents.length){
+    const inc=incidents[0];
+    document.getElementById('statusIncident').style.display='block';
+    document.getElementById('statusIncident').innerHTML=`<div class="inc-banner"><i class="fa fa-triangle-exclamation"></i> <strong>${inc.name}:</strong> ${inc.incident_updates[0]?.body||''} <a href="${STATUSPAGE}" target="_blank" style="color:var(--primary);font-weight:600">View incident →</a></div>`;
+  }
+}
+
+function renderStatusFallback(){
+  const body=document.getElementById('statusBody');
+  body.className='card-body';body.style.padding='4px 18px';
+  const items=[
+    {name:'Paradox — Virtual Queuing',s:'operational'},
+    {name:'Freedom — Point of Sale',s:'degraded_performance'},
+    {name:'Passport US — Ticketing',s:'operational'},
+    {name:'Global Payment Services',s:'under_maintenance'},
+  ];
+  body.innerHTML=items.map(c=>`
+    <div class="st-row">
+      <div class="st-prod">${c.name}</div>
+      <div class="mini-bars">${Array(5).fill(0).map((_,i)=>`<div class="mbar" style="background:${barColor(c.s)}"></div>`).join('')}</div>
+      <div class="st-badge ${indicatorClass(c.s)}">${indicatorLabel(c.s)}</div>
+    </div>`).join('');
+  document.getElementById('statusIncident').style.display='block';
+  document.getElementById('statusIncident').innerHTML=`<div class="inc-banner"><i class="fa fa-triangle-exclamation"></i> <strong>Freedom POS:</strong> Terminal sync degraded — engineers investigating. <a href="${STATUSPAGE}" target="_blank" style="color:var(--primary);font-weight:600">View live status →</a></div>`;
+}
+
+fetchStatus(); setInterval(fetchStatus, 60000);
+
+// ── FUSE.JS SEARCH ────────────────────────────────
+const CONTENT = [
+  // KB Articles
+  {type:'article',title:'Configuring virtual queues for peak periods',product:'Paradox',desc:'Learn how to set up and optimise virtual queue configurations for high-volume periods.',url:`${ATLASSIAN}/wiki/search?text=virtual+queue+configuration`,icon:'fa-layer-group',iconBg:'#F0EBFF',iconColor:'#6B48FF'},
+  {type:'article',title:'Freedom POS: End of day reconciliation guide',product:'Freedom',desc:'Step-by-step guide to performing end-of-day cash and card reconciliation in Freedom POS.',url:`${ATLASSIAN}/wiki/search?text=freedom+POS+reconciliation`,icon:'fa-cash-register',iconBg:'#E8F8EF',iconColor:'#27AE60'},
+  {type:'article',title:'Season pass setup and validation rules',product:'Passport US',desc:'How to configure season passes, validation rules, and troubleshoot common turnstile errors.',url:`${ATLASSIAN}/wiki/search?text=season+pass+validation`,icon:'fa-id-card',iconBg:'#EBF5FF',iconColor:'#2980B9'},
+  {type:'article',title:'Payment gateway integration & timeout configuration',product:'Global Payments',desc:'Configure payment gateway connections, set timeout thresholds, and resolve common timeout errors.',url:`${ATLASSIAN}/wiki/search?text=payment+gateway+timeout`,icon:'fa-credit-card',iconBg:'#FEF3E8',iconColor:'#F5821F'},
+  {type:'article',title:'Queue hold management best practices',product:'Paradox',desc:'Best practices for managing queue holds, duration settings, and operator escalation workflows.',url:`${ATLASSIAN}/wiki/search?text=queue+hold`,icon:'fa-clock',iconBg:'#F0EBFF',iconColor:'#6B48FF'},
+  {type:'article',title:'Freedom POS: Multi-lane setup guide',product:'Freedom',desc:'Configure multiple POS lanes across F&B, retail, and ticketing outlets within a single site.',url:`${ATLASSIAN}/wiki/search?text=freedom+multi+lane`,icon:'fa-store',iconBg:'#E8F8EF',iconColor:'#27AE60'},
+  {type:'article',title:'Paradox API integration overview',product:'Paradox',desc:'Overview of the Paradox REST API, authentication, rate limits, and key endpoints.',url:`${ATLASSIAN}/wiki/search?text=paradox+API`,icon:'fa-code',iconBg:'#F0EBFF',iconColor:'#6B48FF'},
+  {type:'article',title:'How to reset a Freedom POS terminal',product:'Freedom',desc:'Steps to safely reset a Freedom POS terminal, including firmware rollback procedures.',url:`${ATLASSIAN}/wiki/search?text=freedom+terminal+reset`,icon:'fa-rotate',iconBg:'#E8F8EF',iconColor:'#27AE60'},
+  {type:'article',title:'Understanding SLA policies across regions',product:'All Products',desc:'How SLAs are calculated per product and region, including FTS handoff rules and holiday calendars.',url:`${ATLASSIAN}/wiki/search?text=SLA+policy`,icon:'fa-file-contract',iconBg:'var(--primary-light)',iconColor:'var(--primary)'},
+  {type:'article',title:'How to raise a P1 emergency case',product:'All Products',desc:'The process for escalating to P1, emergency contact numbers, and expected response times.',url:`${ATLASSIAN}/wiki/search?text=P1+emergency`,icon:'fa-circle-exclamation',iconBg:'#FDECEA',iconColor:'var(--red)'},
+  {type:'article',title:'Passport US: Admin panel walkthrough',product:'Passport US',desc:'Comprehensive guide to the Passport US admin panel, user management, and configuration.',url:`${ATLASSIAN}/wiki/search?text=passport+admin+panel`,icon:'fa-sliders',iconBg:'#EBF5FF',iconColor:'#2980B9'},
+  {type:'article',title:'GPS reconciliation and reporting',product:'Global Payments',desc:'How to generate payment reconciliation reports and investigate transaction discrepancies.',url:`${ATLASSIAN}/wiki/search?text=GPS+reconciliation`,icon:'fa-file-invoice-dollar',iconBg:'#FEF3E8',iconColor:'#F5821F'},
+  // Cases
+  {type:'case',title:'ACC-1847 — Queue hold config not saving after update',product:'Paradox',desc:'In Progress · High · EMEA team handling',url:`${ATLASSIAN}/servicedesk/customer/portal/63`,icon:'fa-ticket',iconBg:'#F0EBFF',iconColor:'#6B48FF'},
+  {type:'case',title:'ACC-1831 — POS terminal offline after v4.2 patch',product:'Freedom',desc:'Awaiting Info · Critical · APAC team handling',url:`${ATLASSIAN}/servicedesk/customer/portal/53`,icon:'fa-ticket',iconBg:'#E8F8EF',iconColor:'#27AE60'},
+  {type:'case',title:'ACC-1799 — Season pass validation error at turnstile',product:'Passport US',desc:'Open · Medium · Americas team handling',url:`${ATLASSIAN}/servicedesk/customer/portal/63`,icon:'fa-ticket',iconBg:'#EBF5FF',iconColor:'#2980B9'},
+  {type:'case',title:'ACC-1756 — Payment gateway timeout on high volume',product:'Global Payments',desc:'Resolved · Low · EMEA handled',url:`${ATLASSIAN}/servicedesk/customer/portal/37`,icon:'fa-ticket',iconBg:'#FEF3E8',iconColor:'#F5821F'},
+  // Videos
+  {type:'video',title:'Getting started with Paradox queuing',product:'Paradox',desc:'12:34 · 2,341 views',url:'https://www.youtube.com/results?search_query=accesso+paradox+queuing',icon:'fa-circle-play',iconBg:'#F0EBFF',iconColor:'#6B48FF'},
+  {type:'video',title:'Freedom POS onboarding walkthrough',product:'Freedom',desc:'8:21 · 1,897 views',url:'https://www.youtube.com/results?search_query=accesso+freedom+POS',icon:'fa-circle-play',iconBg:'#E8F8EF',iconColor:'#27AE60'},
+  {type:'video',title:'Passport US: Admin panel overview',product:'Passport US',desc:'15:07 · 1,204 views',url:'https://www.youtube.com/results?search_query=accesso+passport+ticketing',icon:'fa-circle-play',iconBg:'#EBF5FF',iconColor:'#2980B9'},
+  {type:'video',title:'Global Payments: Reconciliation guide',product:'Global Payments',desc:'6:48 · 834 views',url:'https://www.youtube.com/results?search_query=accesso+global+payments',icon:'fa-circle-play',iconBg:'#FEF3E8',iconColor:'#F5821F'},
+  // Community
+  {type:'community',title:'Best practices for queue hold management during peak periods',product:'Paradox',desc:'Answered · 143 views · Alton Towers Resort',url:'#community',icon:'fa-comments',iconBg:'#F0EBFF',iconColor:'#6B48FF'},
+  {type:'community',title:'Freedom POS — tips for multi-lane setup across F&B outlets',product:'Freedom',desc:'6 replies · 87 views · Merlin Entertainments',url:'#community',icon:'fa-comments',iconBg:'#E8F8EF',iconColor:'#27AE60'},
+  {type:'community',title:'Slower load times on Passport US ticket scan this week',product:'Passport US',desc:'Answered · 312 views · Six Flags Entertainment',url:'#community',icon:'fa-comments',iconBg:'#EBF5FF',iconColor:'#2980B9'},
+];
+
+const fuse = new Fuse(CONTENT, {
+  keys:[{name:'title',weight:0.6},{name:'product',weight:0.2},{name:'desc',weight:0.2}],
+  threshold:0.35, includeScore:true, minMatchCharLength:2
+});
+
+let currentQuery='';
+
+function openSearch(val){
+  document.getElementById('searchOverlay').classList.add('show');
+  document.getElementById('spInput').value=val||'';
+  document.getElementById('spInput').focus();
+  if(val) liveSearch(val);
+}
+function closeSearch(){
+  document.getElementById('searchOverlay').classList.remove('show');
+  document.getElementById('hSearch').value='';
+}
+function closeSearchIfOutside(e){
+  if(e.target===document.getElementById('searchOverlay')) closeSearch();
+}
+function handleSearchKey(e){
+  if(e.key==='Escape') closeSearch();
+}
+
+function liveSearch(q){
+  currentQuery=q;
+  // Sync header and search panel inputs
+  if(document.getElementById('spInput').value!==q) document.getElementById('spInput').value=q;
+  if(!q||q.length<2){
+    document.getElementById('spBody').innerHTML='<div class="sp-empty"><i class="fa fa-magnifying-glass"></i>Start typing to search across all accesso content</div>';
+    document.getElementById('atlassianCTA').style.display='none';
+    return;
+  }
+  const results=fuse.search(q).slice(0,12);
+  document.getElementById('atlassianCTA').style.display='flex';
+  if(!results.length){
+    document.getElementById('spBody').innerHTML=`<div class="sp-empty"><i class="fa fa-face-sad-tear"></i>No results for "<strong>${q}</strong>"<br><span style="font-size:12px">Try searching in Atlassian below</span></div>`;
+    return;
+  }
+  const groups={article:[],case:[],video:[],community:[]};
+  results.forEach(r=>groups[r.item.type].push(r.item));
+  const labels={article:'Knowledge Base Articles',case:'Support Cases',video:'Training Videos',community:'Community Discussions'};
+  const icons={article:'fa-book-open',case:'fa-ticket',video:'fa-circle-play',community:'fa-comments'};
+  let html='';
+  ['article','case','video','community'].forEach(type=>{
+    if(!groups[type].length) return;
+    html+=`<div class="sp-section"><div class="sp-section-lbl"><i class="fa ${icons[type]}"></i> ${labels[type]}</div>`;
+    groups[type].forEach(item=>{
+      html+=`<div class="sr-item" onclick="window.open('${item.url}','_blank')">
+        <div class="sr-ico" style="background:${item.iconBg};color:${item.iconColor}"><i class="fa ${item.icon}"></i></div>
+        <div style="flex:1;min-width:0">
+          <div class="sr-title">${item.title}</div>
+          <div class="sr-meta">${item.desc}</div>
+          <div class="sr-tags"><span class="sr-tag" style="background:var(--primary-light);color:var(--primary)">${item.product}</span></div>
+        </div>
+        <div class="sr-action">Open <i class="fa fa-arrow-up-right-from-square" style="font-size:10px"></i></div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('spBody').innerHTML=html;
+}
+
+function searchInAtlassian(){
+  const q=currentQuery||document.getElementById('spInput').value;
+  window.open(`${ATLASSIAN}/wiki/search?text=${encodeURIComponent(q)}`,'_blank');
+}
+
+// ── NAV & PRODUCT ─────────────────────────────────
+function navClick(el){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active');}
+function switchProd(p,btn){document.querySelectorAll('.prod-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+
+// SSO assumed — ticket links go directly to Atlassian portal
+
+// ── CHATBOT ───────────────────────────────────────
+let chatOpen=false;
+function toggleChat(){
+  chatOpen=!chatOpen;
+  document.getElementById('chatWin').className=chatOpen?'chat-win open':'chat-win';
+  document.getElementById('chatNotif').style.display=chatOpen?'none':'flex';
+  if(chatOpen) document.getElementById('chatIn').focus();
+}
+
+const BOT = {
+  'queue hold': `I found 3 articles about queue hold configuration in Paradox. The most common fix is ensuring <strong>Hold Duration</strong> is set under System Config → Queue Management → Hold Settings, then save and restart the queue service.<br><br><a href="${ATLASSIAN}/wiki/search?text=queue+hold" target="_blank">📖 Search KB for queue hold →</a><br><a href="${ATLASSIAN}/servicedesk/customer/portal/63" target="_blank">🎫 View ACC-1847 in Jira →</a>`,
+  'pos offline': `The Freedom POS offline issue after v4.2 is an <strong>active known incident</strong>. Workaround: roll back terminal firmware via Admin → Terminal Management → v4.1.9.<br><br><a href="${ATLASSIAN}/servicedesk/customer/portal/53" target="_blank">🎫 View ACC-1831 in Jira →</a><br><a href="${STATUSPAGE}" target="_blank">📡 Check live status →</a>`,
+  'terminal offline': `The Freedom POS offline issue after v4.2 is an <strong>active known incident</strong>. Workaround: roll back terminal firmware via Admin → Terminal Management → v4.1.9.<br><br><a href="${ATLASSIAN}/servicedesk/customer/portal/53" target="_blank">🎫 View ACC-1831 in Jira →</a><br><a href="${STATUSPAGE}" target="_blank">📡 Check live status →</a>`,
+  'track my cases': `You have <strong>3 open cases</strong>:<br>• <strong>ACC-1847</strong> — Paradox, High, EMEA<br>• <strong>ACC-1831</strong> — Freedom, Critical, APAC<br>• <strong>ACC-1799</strong> — Passport US, Medium, Americas<br><br><a href="${ATLASSIAN}/servicedesk/customer/user/requests" target="_blank">📋 View all cases in Jira →</a>`,
+  'season pass': `Common causes of season pass validation errors: expired validation cache, mismatched barcode format, or a network timeout at the turnstile.<br><br><a href="${ATLASSIAN}/wiki/search?text=season+pass+validation" target="_blank">📖 Read the KB article →</a><br><a href="${ATLASSIAN}/servicedesk/customer/portal/63" target="_blank">🎫 Raise a support case →</a>`,
+  'payment': `Payment gateway timeouts are usually caused by connection pool exhaustion. Check GPS gateway config for <strong>Max Concurrent Connections</strong> — recommend 200+ for peak load. ACC-1756 was resolved with this fix.<br><br><a href="${ATLASSIAN}/wiki/search?text=payment+gateway" target="_blank">📖 View KB article →</a><br><a href="${ATLASSIAN}/servicedesk/customer/portal/37" target="_blank">🎫 Open GPS portal →</a>`,
+  'raise a new ticket': `I'll take you straight to the support portal — your SSO will sign you in automatically.<br><br><a href="${ATLASSIAN}/servicedesk/customer/portals" target="_blank">🎫 Open Support Portal →</a>`,
+  'status': `Here's the current status from Atlassian Statuspage:<br><br><a href="${STATUSPAGE}" target="_blank">📡 View live accesso Status Page →</a>`,
+  'knowledge base': `I can search the knowledge base for you — just tell me what topic. Or you can browse directly:<br><br><a href="${ATLASSIAN}/wiki" target="_blank">📚 Open Confluence KB →</a>`,
+};
+
+function findReply(msg){
+  const l=msg.toLowerCase();
+  for(const[k,v]of Object.entries(BOT)){if(l.includes(k))return v;}
+  // Try search
+  const res=fuse.search(msg).slice(0,2);
+  if(res.length){
+    const links=res.map(r=>`• <a href="${r.item.url}" target="_blank">${r.item.title}</a>`).join('<br>');
+    return `Here's what I found for "<strong>${msg}</strong>":<br><br>${links}<br><br>Or <a href="${ATLASSIAN}/wiki/search?text=${encodeURIComponent(msg)}" target="_blank">search all of Atlassian →</a>`;
+  }
+  return `I searched across all accesso products for "<strong>${msg}</strong>" but couldn't find an exact match. Try:<br><br><a href="${ATLASSIAN}/wiki/search?text=${encodeURIComponent(msg)}" target="_blank">📚 Search Confluence KB →</a><br><a href="${ATLASSIAN}/servicedesk/customer/user/requests" target="_blank">📋 View your cases in Jira →</a>`;
+}
+
+function appendMsg(text,isUser){
+  const msgs=document.getElementById('chatMsgs');
+  const d=document.createElement('div');
+  d.className='msg '+(isUser?'user':'bot');
+  d.innerHTML=isUser
+    ?`<div class="msg-bbl">${text}</div><div class="msg-av">JA</div>`
+    :`<div class="msg-av"><i class="fa fa-robot"></i></div><div class="msg-bbl">${text}</div>`;
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+}
+function showTyping(){
+  const msgs=document.getElementById('chatMsgs');
+  const d=document.createElement('div');d.className='msg bot';d.id='typ';
+  d.innerHTML=`<div class="msg-av"><i class="fa fa-robot"></i></div><div class="typing"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>`;
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+}
+function sendChat(){
+  const inp=document.getElementById('chatIn');
+  const msg=inp.value.trim();if(!msg)return;
+  inp.value='';appendMsg(msg,true);
+  document.getElementById('chatSuggs').style.display='none';
+  showTyping();
+  setTimeout(()=>{document.getElementById('typ')?.remove();appendMsg(findReply(msg),false);},900+Math.random()*600);
+}
+function sendSugg(btn){document.getElementById('chatIn').value=btn.textContent;sendChat();}
+
+// ── KEYBOARD SHORTCUT ─────────────────────────────
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch('');}
+  if(e.key==='Escape'&&document.getElementById('searchOverlay').classList.contains('show')){closeSearch();}
+});
+</script>
+</body>
+</html>
